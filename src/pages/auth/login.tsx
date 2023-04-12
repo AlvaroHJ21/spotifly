@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
 import { FormEvent, useState, useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import axios from 'axios';
 
 const client_id = 'e6cada96b034423ab1267abc6a495bf3';
 const client_secret = '03262928f72e42958889c0e9240c9584';
-const redirect_uri = 'http://localhost:3000/auth/login';
+const redirect_uri = 'https://spotifly-dusky.vercel.app/auth/login';
 const scopes =
     'user-read-private user-read-email playlist-read-private user-top-read user-read-recently-played';
 const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}&scope=${scopes}`;
