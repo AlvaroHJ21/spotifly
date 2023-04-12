@@ -1,13 +1,68 @@
 import { useRouter } from 'next/router';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import spotifyApi from '../../api/spotifyApi';
+import axios from 'axios';
+
+const client_id = 'e6cada96b034423ab1267abc6a495bf3';
+const client_secret = '03262928f72e42958889c0e9240c9584';
+const redirect_uri = 'http://localhost:3000/auth/login';
+const scopes =
+    'user-read-private user-read-email playlist-read-private user-top-read user-read-recently-played';
+const spoty_url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}&scope=${scopes}`;
 
 export default function login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const router = useRouter();
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const spotyCode = urlParams.get('code');
+        if (spotyCode) {
+            autenticateUser(spotyCode);
+        }
+    }, []);
+
+    const autenticateUser = (spotyCode: string) => {
+        try {
+            // console.log(spotyCode);
+            const searchParams = new URLSearchParams({
+                grant_type: 'authorization_code',
+                code: spotyCode,
+                redirect_uri: redirect_uri,
+                client_id: client_id,
+                client_secret: client_secret,
+            });
+            // console.log(searchParams);
+
+            fetch('https://accounts.spotify.com/api/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                },
+                body: searchParams,
+            })
+                .then((response) => response.json())
+
+                // axios.post("https://accounts.spotify.com/api/token", searchParams)
+
+                .then((res) => {
+                    // Global.access_token = res.data.access_token
+                    // Global.refresh_token = res.data.refresh_token
+                    console.log(res);
+                    localStorage.setItem('access_token', res.access_token);
+                    localStorage.setItem('refresh_token', res.refresh_token);
+
+                    // navigate("/playlists");
+                    router.replace("/explore");
+
+                    // window.location.replace("/playlists?access_token="+Global.access_token);
+                });
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -16,10 +71,11 @@ export default function login() {
             password,
         });
 
-        await spotifyApi.getToken();
-        
-        router.replace("/home")
-        
+        // await spotifyApi.getToken();
+
+        // router.replace("/home")
+
+        window.location.replace(spoty_url);
     }
 
     return (

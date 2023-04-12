@@ -26,7 +26,7 @@ const sections: SectionSidebarItems[] = [
                 name: 'Explore',
                 icon: <MdExplore />,
                 active: true,
-                path: "/explore"
+                path: '/explore',
             },
             {
                 name: 'Geners',
@@ -88,11 +88,11 @@ const sections: SectionSidebarItems[] = [
 
 export default function Sidebar() {
     return (
-        <aside className="py-12 text-white min-h-screen bg-[#18181d]">
+        <aside className="py-8 text-white min-h-screen bg-[#18181d]">
             <div className="flex flex-col gap-12">
                 {/* Logo */}
-                <div className="px-12">
-                    <h2 className="font-black">
+                <div className="px-8">
+                    <h2 className="text-xl font-black">
                         Spoti<span className="text-primary">Fly</span>
                     </h2>
                 </div>
@@ -100,26 +100,27 @@ export default function Sidebar() {
                 {/* Menu */}
                 {sections.map(({ category, items }) => (
                     <div key={category} className="">
-                        <h3 className="mb-4 text-sm font-semibold text-gray-500 uppercase ps-12">
+                        <h3 className="mb-4 text-sm font-semibold text-gray-500 uppercase ps-8">
                             {category}
                         </h3>
-                        <div className="flex flex-col gap-2 cursor-pointer">
+                        <ul className="flex flex-col gap-2 cursor-pointer">
                             {items.map(({ name, icon, active, path }) => (
-                                <Link
-                                    href={path ? path : '/'}
-                                    key={name}
-                                    className={`flex items-center gap-4 ps-12 ${
-                                        active ? 'text-primary' : 'text-white'
-                                    }`}
-                                >
-                                    {icon}
-                                    <p className="flex-1">{name}</p>
-                                    {active && (
-                                        <div className="self-stretch w-1 rounded-full bg-primary"></div>
-                                    )}
-                                </Link>
+                                <li key={name}>
+                                    <Link
+                                        href={path ? path : '/'}
+                                        className={`flex items-center gap-4 ps-8 ${
+                                            active ? 'text-primary' : 'text-white'
+                                        }`}
+                                    >
+                                        {icon}
+                                        <div className="flex-1">{name}</div>
+                                        {active && (
+                                            <div className="self-stretch w-1 rounded-full bg-primary"></div>
+                                        )}
+                                    </Link>
+                                </li>
                             ))}
-                        </div>
+                        </ul>
                     </div>
                 ))}
             </div>
